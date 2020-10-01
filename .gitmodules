@@ -1,4 +1,4 @@
-[submodule "ml"]
-	path = ml
-	url = https://github.com/unica-ml/ml
+[submodule "isde"]
+	path = isde
+	url = https://github.com/unica-isde/isde
 	branch = master
