@@ -404,12 +404,19 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="Python-Basics">
 <h1><span class="section-number">1. </span>Python Basics<a class="headerlink" href="#Python-Basics" title="Permalink to this headline">¶</a></h1>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
 <span></span># welcome
 print(&quot;Hello world!&quot;)
+
+x = [1, 2, 3]
+y = x
+x.append(4)
+print(&quot;x: &quot;, x)
+print(&quot;y: &quot;, y)
+
 </pre></div>
 </div>
 </div>
@@ -419,6 +426,125 @@ print(&quot;Hello world!&quot;)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Hello world!
+x:  [1, 2, 3, 4]
+y:  [1, 2, 3, 4]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>x = [1, 2, 3]
+y = x[:]  #  copy the whole list in memory
+x.append(4)
+print(&quot;x: &quot;, x)
+print(&quot;y: &quot;, y)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+x:  [1, 2, 3, 4]
+y:  [1, 2, 3]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>l = list(range(0,5))
+print(l)
+
+l = list(range(-10,-20,-1))
+print(l)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[0, 1, 2, 3, 4]
+[-10, -11, -12, -13, -14, -15, -16, -17, -18, -19]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>a = [&#39;pippo&#39;, &#39;paperino&#39;, &#39;topolino&#39;]
+
+for elem in a:
+    print(elem)
+
+for i, elem in enumerate(a):
+    print(i, elem)
+
+for i in range(len(a)):
+    print(i, a[i])
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+pippo
+paperino
+topolino
+0 pippo
+1 paperino
+2 topolino
+0 pippo
+1 paperino
+2 topolino
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>import numpy as np
+
+a = np.eye(3)
+print(a)
+
+idx = np.array([1, 1, 0])
+
+print(idx)
+print(idx == 1)
+
+print(a[idx==1, :])
+
+r = [0,1]
+print(a[r,:])
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[1. 0. 0.]
+ [0. 1. 0.]
+ [0. 0. 1.]]
+[1 1 0]
+[ True  True False]
+[[1. 0. 0.]
+ [0. 1. 0.]]
+[[1. 0. 0.]
+ [0. 1. 0.]]
 </pre></div></div>
 </div>
 </div>
