@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>1. Python Basics &mdash; Industrial Software Development  documentation</title>
+  <title>2. A simple classification problem &mdash; Industrial Software Development  documentation</title>
   
 
   
@@ -37,8 +37,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="2. A simple classification problem" href="lab02.html" />
-    <link rel="prev" title="Industrial Software Development" href="../index.html" /> 
+    <link rel="prev" title="1. Python Basics" href="lab01.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -82,8 +81,8 @@
             
               <p class="caption"><span class="caption-text">Laboratory</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Python Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lab02.html">2. A simple classification problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab01.html">1. Python Basics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. A simple classification problem</a></li>
 </ul>
 
             
@@ -130,7 +129,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li><span class="section-number">1. </span>Python Basics</li>
+      <li><span class="section-number">2. </span>A simple classification problem</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -403,22 +402,36 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <p><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></p>
-<div class="section" id="Python-Basics">
-<h1><span class="section-number">1. </span>Python Basics<a class="headerlink" href="#Python-Basics" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="A-simple-classification-problem">
+<h1><span class="section-number">2. </span>A simple classification problem<a class="headerlink" href="#A-simple-classification-problem" title="Permalink to this headline">¶</a></h1>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span># welcome
-print(&quot;Hello world!&quot;)
+<span></span>import pandas as pd
+import numpy as np
 
-x = [1, 2, 3]
-y = x
-x.append(4)
-print(&quot;x: &quot;, x)
-print(&quot;y: &quot;, y)
 
+def load_mnist_data(filename, n_samples=None):
+    &quot;&quot;&quot;This function returns MNIST handwritten digits and labels as ndarrays.&quot;&quot;&quot;
+    data = pd.read_csv(filename)
+    data = np.array(data)  # cast pandas dataframe to numpy array
+    if n_samples is not None:  # only returning the first n_samples
+        data = data[:n_samples, :]
+    y = data[:,0]
+    x = data[:,1:] / 255.0
+    return x, y
+
+
+# filename = &quot;https://download.mlcc.google.com/mledu-datasets/mnist_train_small.csv&quot;
+filename = &quot;https://github.com/unica-isde/isde/raw/master/data/mnist_data.csv&quot;
+
+x, y = load_mnist_data(filename, n_samples=1000)
+print(x.shape)
+print(y.shape)
+print(y, type(y))
+print(x, type(x))
 </pre></div>
 </div>
 </div>
@@ -427,21 +440,59 @@ print(&quot;y: &quot;, y)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Hello world!
-x:  [1, 2, 3, 4]
-y:  [1, 2, 3, 4]
+(1000, 784)
+(1000,)
+[6 7 0 6 8 2 6 3 9 3 2 8 6 1 7 4 8 8 9 0 3 3 9 0 5 2 9 4 1 0 3 7 5 8 7 7 8
+ 2 9 7 1 2 6 4 2 5 2 3 6 6 5 0 0 2 8 1 6 1 0 4 3 1 6 1 9 0 1 4 5 6 7 8 9 1
+ 2 3 4 5 6 7 0 1 2 3 4 5 6 7 8 9 8 4 0 0 7 2 4 3 8 6 6 3 2 6 3 3 0 1 4 7 8
+ 0 3 1 9 0 1 9 1 2 7 0 1 3 8 2 9 2 7 6 5 5 9 9 8 2 9 1 3 2 3 4 3 1 9 0 9 3
+ 6 8 7 0 1 0 5 8 2 7 7 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
+ 6 7 8 9 1 7 4 8 1 5 6 5 7 2 8 6 3 3 8 6 5 4 0 9 1 7 2 9 1 5 1 3 2 2 3 0 6
+ 4 3 7 6 9 0 4 8 1 4 0 6 1 2 6 9 2 2 3 5 5 1 0 7 7 9 6 2 9 4 7 0 2 3 4 0 0
+ 8 8 8 5 1 3 7 4 9 8 8 9 0 9 8 9 0 2 6 5 6 7 4 7 5 4 1 3 5 3 1 2 3 4 5 6 1
+ 2 3 4 6 0 1 2 4 5 6 7 8 1 7 2 4 1 4 1 4 9 6 8 4 5 3 7 8 4 3 3 5 6 7 0 6 1
+ 6 8 7 0 1 5 0 8 5 0 1 5 8 4 2 3 9 7 6 9 1 9 0 6 7 1 2 3 9 2 4 5 5 3 7 5 3
+ 1 8 2 2 3 0 2 9 4 9 7 0 2 7 4 9 9 2 5 9 8 3 8 6 7 0 0 1 2 3 4 5 6 7 8 9 0
+ 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 0 7 2 6 5 5 3 7 8 6 6 6 6 4 3 8 8
+ 3 0 1 9 0 5 4 1 9 1 2 7 0 1 3 8 2 9 2 7 4 2 6 5 5 9 9 1 1 5 7 6 8 2 9 4 3
+ 1 9 0 9 3 6 8 7 0 1 0 5 8 2 7 7 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 8 9 0 1 2
+ 3 4 5 6 7 8 9 2 1 2 1 3 9 9 8 5 3 7 0 7 7 5 7 9 9 4 7 0 3 4 1 5 8 1 4 8 4
+ 1 8 6 6 4 6 0 5 5 3 3 5 7 2 5 9 6 9 2 6 2 1 2 0 8 3 8 3 0 8 7 4 9 5 0 9 7
+ 0 0 4 6 0 9 1 6 2 7 6 8 3 5 2 1 8 3 8 6 1 0 2 1 4 0 1 2 3 4 5 6 7 8 9 0 1
+ 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 7 6 4 7 6 2 3 4 8 7 8 6 9 8 3 2 2 8 4
+ 8 5 6 5 0 2 0 1 1 2 9 6 8 2 1 0 6 5 2 9 7 5 3 9 3 7 1 8 3 8 1 9 5 5 0 1 1
+ 9 8 2 6 0 4 5 0 3 1 8 6 7 5 9 9 3 0 3 1 4 4 0 4 9 0 1 2 3 5 6 7 8 0 1 2 3
+ 5 6 7 8 9 0 1 2 3 5 6 7 8 9 9 7 0 9 0 1 5 8 8 0 9 3 2 7 8 4 6 1 0 4 9 4 2
+ 0 5 0 1 6 9 3 2 9 1 6 0 1 1 8 7 7 6 3 6 0 7 2 4 1 7 0 6 7 1 2 5 8 1 8 2 8
+ 7 6 8 7 1 6 2 9 3 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
+ 8 9 8 9 5 7 0 3 1 6 8 4 1 5 6 4 2 7 8 1 3 4 3 4 7 2 0 5 0 1 9 2 3 2 3 5 5
+ 7 8 4 9 9 7 1 1 9 0 7 8 3 4 8 6 3 8 0 9 6 2 1 0 1 0 6 2 3 8 9 0 7 2 3 4 5
+ 5 2 8 5 4 6 6 6 7 9 1 8 2 1 5 3 4 7 9 4 0 0 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4
+ 5 6 7 8 9 0 1 2 3 4 5 6 9 0 1 3 1 5 1 2 4 9 2 4 6 8 0 1 1 9 2 6 6 8 7 4 2
+ 9] &lt;class &#39;numpy.ndarray&#39;&gt;
+[[0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ ...
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]] &lt;class &#39;numpy.ndarray&#39;&gt;
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>x = [1, 2, 3]
-y = x[:]  #  copy the whole list in memory
-x.append(4)
-print(&quot;x: &quot;, x)
-print(&quot;y: &quot;, y)
+<span></span>num_classes = 10
+counts = np.zeros(shape=(num_classes,), dtype=int)
+
+for i in range(num_classes):
+    counts[i] = np.array(y==i).sum()
+    print(i, counts[i])
+
+print(counts)
+
 </pre></div>
 </div>
 </div>
@@ -450,64 +501,17 @@ print(&quot;y: &quot;, y)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-x:  [1, 2, 3, 4]
-y:  [1, 2, 3]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>l = list(range(0,5))
-print(l)
-
-l = list(range(-10,-20,-1))
-print(l)
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[0, 1, 2, 3, 4]
-[-10, -11, -12, -13, -14, -15, -16, -17, -18, -19]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
-</div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>a = [&#39;pippo&#39;, &#39;paperino&#39;, &#39;topolino&#39;]
-
-for elem in a:
-    print(elem)
-
-for i, elem in enumerate(a):
-    print(i, elem)
-
-for i in range(len(a)):
-    print(i, a[i])
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-pippo
-paperino
-topolino
-0 pippo
-1 paperino
-2 topolino
-0 pippo
-1 paperino
-2 topolino
+0 105
+1 113
+2 105
+3 99
+4 87
+5 89
+6 101
+7 98
+8 102
+9 101
+[105 113 105  99  87  89 101  98 102 101]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -515,20 +519,19 @@ topolino
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>import numpy as np
+<span></span>import matplotlib.pyplot as plt
 
-a = np.eye(3)
-print(a)
 
-idx = np.array([1, 1, 0])
+def plot_image(im, shape=(28,28)):
+    im = im.reshape(shape)  # reshape the digit to be 28x28
+    plt.imshow(im, cmap=&#39;binary&#39;)
 
-print(idx)
-print(idx == 1)
 
-print(a[idx==1, :])
-
-r = [0,1]
-print(a[r,:])
+for i in range(10):
+    plt.subplot(2, 5, i+1)
+    image = x[i, :]
+    plot_image(image)
+    plt.title(&quot;label: &quot; + str(y[i]))
 
 </pre></div>
 </div>
@@ -537,17 +540,161 @@ print(a[r,:])
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
+<img alt="../images/tutorials_lab02_4_0.png" src="../images/tutorials_lab02_4_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span># fit my classification function (estimate centroids from training data)
+x0 = x[y==0, :]
+y0 = y[y==0]
+
+print(y0.size)
+print(x0.shape[0])
+
+for i in range(10):
+    plt.subplot(2, 5, i+1)
+    image = x0[i, :]
+    plot_image(image)
+    plt.title(&quot;label: &quot; + str(y0[i]))
+
+centroid0 = x0.mean(axis=0)
+print(centroid0.shape)
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
 <div class="highlight"><pre>
-[[1. 0. 0.]
- [0. 1. 0.]
- [0. 0. 1.]]
-[1 1 0]
-[ True  True False]
-[[1. 0. 0.]
- [0. 1. 0.]]
-[[1. 0. 0.]
- [0. 1. 0.]]
+105
+105
+(784,)
 </pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../images/tutorials_lab02_5_1.png" src="../images/tutorials_lab02_5_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+
+<span></span>plot_image(centroid0)
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../images/tutorials_lab02_6_0.png" src="../images/tutorials_lab02_6_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span># compute centroid for each class
+
+print(x.shape)
+
+num_features = x.shape[1]
+centroids = np.zeros(shape=(num_classes, num_features))
+print(centroids.shape)
+
+for i in range(num_classes):
+    xi = x[y==i, :]  # all digits from class i
+    centroids[i,:] = xi.mean(axis=0)  # average digit for class i
+
+for i in range(10):
+    plt.subplot(2, 5, i+1)
+    plot_image(centroids[i, :])
+    plt.title(&quot;label: &quot; + str(i))
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(1000, 784)
+(10, 784)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../images/tutorials_lab02_7_1.png" src="../images/tutorials_lab02_7_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span># wrap it into the fit function
+
+print(np.unique(y))
+
+def fit(x_tr, y_tr):
+    &quot;&quot;&quot;Estimate the centroid for each class from the training data&quot;&quot;&quot;
+    labels = np.unique(y_tr)
+    centroids = np.zeros(shape=(labels.size, x_tr.shape[1]))
+
+    for i, label in enumerate(labels):
+        centroids[i,:] = x_tr[y_tr==label, :].mean(axis=0)  # centr. for class i
+
+    return centroids, labels
+
+
+centroids, labels = fit(x, y)
+
+for i in range(10):
+    plt.subplot(2, 5, i+1)
+    plot_image(centroids[i, :])
+    plt.title(&quot;label: &quot; + str(labels[i]))
+
+
+
+names = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
+
+for i, name in enumerate(names):
+    print(i, name)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[0 1 2 3 4 5 6 7 8 9]
+0 a
+1 b
+2 c
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../images/tutorials_lab02_8_1.png" src="../images/tutorials_lab02_8_1.png" />
+</div>
 </div>
 </div>
 
@@ -559,10 +706,8 @@ print(a[r,:])
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="lab02.html" class="btn btn-neutral float-right" title="2. A simple classification problem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="../index.html" class="btn btn-neutral float-left" title="Industrial Software Development" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="lab01.html" class="btn btn-neutral float-left" title="1. Python Basics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
