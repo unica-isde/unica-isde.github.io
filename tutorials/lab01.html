@@ -82,7 +82,12 @@
             
               <p class="caption"><span class="caption-text">Laboratory</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Python Basics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Python Basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Lists">1.1. Lists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Control-of-flow">1.2. Control of flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="# Numpy-arrays">1.3.  Numpy arrays</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="lab02.html">2. Python - Programming Exercise</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lab02.html# Implementing-the-fit-function">2.1.  Implementing the fit function</a></li>
 </ul>
@@ -408,20 +413,14 @@ div.rendered_html tbody tr:hover {
 <p><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></p>
 <div class="section" id="Python-Basics">
 <h1><span class="section-number">1. </span>Python Basics<a class="headerlink" href="#Python-Basics" title="Permalink to this headline">¶</a></h1>
+<p>This notebook includes some examples from this lecture: <a class="reference external" href="https://github.com/unica-isde/isde/blob/master/slides/03-Python.pdf">https://github.com/unica-isde/isde/blob/master/slides/03-Python.pdf</a></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
 <span></span># welcome
 print(&quot;Hello world!&quot;)
-
-x = [1, 2, 3]
-y = x
-x.append(4)
-print(&quot;x: &quot;, x)
-print(&quot;y: &quot;, y)
-
 </pre></div>
 </div>
 </div>
@@ -431,12 +430,63 @@ print(&quot;y: &quot;, y)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Hello world!
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>x = 34 - 23
+y = &quot;Hello&quot;
+z = 3.45
+
+if z == 3.45 or y==&quot;Hello&quot;:
+    x = x + 1
+    y = y + &quot; World&quot;
+
+print(&quot;x: &quot;, x)
+print(&quot;y: &quot;, y)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+12
+Hello World
+</pre></div></div>
+</div>
+<div class="section" id="Lists">
+<h2><span class="section-number">1.1. </span>Lists<a class="headerlink" href="#Lists" title="Permalink to this headline">¶</a></h2>
+<p>Modify mutable objects with in-place operators…</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>x = [1, 2, 3]
+y = x
+x.append(4)  # this modifies both lists
+print(&quot;x: &quot;, x)
+print(&quot;y: &quot;, y)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
 x:  [1, 2, 3, 4]
 y:  [1, 2, 3, 4]
 </pre></div></div>
 </div>
+<p>… and avoid the issue by copying the object first.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
@@ -457,8 +507,9 @@ x:  [1, 2, 3, 4]
 y:  [1, 2, 3]
 </pre></div></div>
 </div>
+<p>Other operations with lists.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
@@ -479,18 +530,26 @@ print(l)
 [-10, -11, -12, -13, -14, -15, -16, -17, -18, -19]
 </pre></div></div>
 </div>
+</div>
+<div class="section" id="Control-of-flow">
+<h2><span class="section-number">1.2. </span>Control of flow<a class="headerlink" href="#Control-of-flow" title="Permalink to this headline">¶</a></h2>
+<p>Examples of <code class="docutils literal notranslate"><span class="pre">for</span></code> loops.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>a = [&#39;pippo&#39;, &#39;paperino&#39;, &#39;topolino&#39;]
+<span></span>a = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
 
 for elem in a:
     print(elem)
 
+print(&quot; &quot;)
+
 for i, elem in enumerate(a):
     print(i, elem)
+
+print(&quot; &quot;)
 
 for i in range(len(a)):
     print(i, a[i])
@@ -502,37 +561,45 @@ for i in range(len(a)):
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-pippo
-paperino
-topolino
-0 pippo
-1 paperino
-2 topolino
-0 pippo
-1 paperino
-2 topolino
+a
+b
+c
+
+0 a
+1 b
+2 c
+
+0 a
+1 b
+2 c
 </pre></div></div>
 </div>
+</div>
+<div class="section" id=" Numpy-arrays">
+<h2><span class="section-number">1.3. </span> Numpy arrays<a class="headerlink" href="# Numpy-arrays" title="Permalink to this headline">¶</a></h2>
+<p>Some examples of indexing.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
 <span></span>import numpy as np
 
 a = np.eye(3)
-print(a)
+print(&quot;Identity matrix: &quot;, a)
+print(&quot; &quot;)
 
-idx = np.array([1, 1, 0])
+idx = np.array([1, 1, 0])  # extract first and second row (idx==1)
+print(&quot;Rows to be extracted: &quot;, idx)
+print(&quot;... when idx==1: &quot;, idx == 1)
+print(&quot; &quot;)
 
-print(idx)
-print(idx == 1)
+print(&quot;Indexing with a Boolean vector:\n&quot;, a[idx==1, :])
+print(&quot; &quot;)
 
-print(a[idx==1, :])
-
-r = [0,1]
-print(a[r,:])
-
+r = [0,1]  # extract rows with index 0 and 1
+print(&quot;Indexing with a list of indices:\n&quot;, a[r,:])
+print(&quot; &quot;)
 </pre></div>
 </div>
 </div>
@@ -541,16 +608,23 @@ print(a[r,:])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[[1. 0. 0.]
+Identity matrix:  [[1. 0. 0.]
  [0. 1. 0.]
  [0. 0. 1.]]
-[1 1 0]
-[ True  True False]
-[[1. 0. 0.]
+
+Rows to be extracted:  [1 1 0]
+... when idx==1:  [ True  True False]
+
+Indexing with a Boolean vector:
+ [[1. 0. 0.]
  [0. 1. 0.]]
-[[1. 0. 0.]
+
+Indexing with a list of indices:
+ [[1. 0. 0.]
  [0. 1. 0.]]
+
 </pre></div></div>
+</div>
 </div>
 </div>
 
