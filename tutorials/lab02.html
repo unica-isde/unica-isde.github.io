@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>2. A simple classification problem &mdash; Industrial Software Development  documentation</title>
+  <title>2. Python - Programming Exercise &mdash; Industrial Software Development  documentation</title>
   
 
   
@@ -82,7 +82,10 @@
               <p class="caption"><span class="caption-text">Laboratory</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="lab01.html">1. Python Basics</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">2. A simple classification problem</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Python - Programming Exercise</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="# Implementing-the-fit-function">2.1.  Implementing the fit function</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -129,7 +132,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li><span class="section-number">2. </span>A simple classification problem</li>
+      <li><span class="section-number">2. </span>Python - Programming Exercise</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -402,10 +405,12 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <p><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></p>
-<div class="section" id="A-simple-classification-problem">
-<h1><span class="section-number">2. </span>A simple classification problem<a class="headerlink" href="#A-simple-classification-problem" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Python---Programming-Exercise">
+<h1><span class="section-number">2. </span>Python - Programming Exercise<a class="headerlink" href="#Python---Programming-Exercise" title="Permalink to this headline">¶</a></h1>
+<p>In this programming exercise, we will implement a simple machine-learning algorithm to classify handwritten digits.</p>
+<p>We start by writing a simple function to load the popular MNIST handwritten digit images and visualize some examples.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
@@ -424,7 +429,7 @@ def load_mnist_data(filename, n_samples=None):
     return x, y
 
 
-# filename = &quot;https://download.mlcc.google.com/mledu-datasets/mnist_train_small.csv&quot;
+# loads data from a CSV file hosted in our repository
 filename = &quot;https://github.com/unica-isde/isde/raw/master/data/mnist_data.csv&quot;
 
 x, y = load_mnist_data(filename, n_samples=1000)
@@ -479,12 +484,13 @@ print(x, type(x))
  [0. 0. 0. ... 0. 0. 0.]] &lt;class &#39;numpy.ndarray&#39;&gt;
 </pre></div></div>
 </div>
+<p>Let’s count how many digit images we have for each class.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>num_classes = 10
+<span></span>num_classes = np.unique(y).size  # number of unique elements in y
 counts = np.zeros(shape=(num_classes,), dtype=int)
 
 for i in range(num_classes):
@@ -492,7 +498,6 @@ for i in range(num_classes):
     print(i, counts[i])
 
 print(counts)
-
 </pre></div>
 </div>
 </div>
@@ -514,8 +519,9 @@ print(counts)
 [105 113 105  99  87  89 101  98 102 101]
 </pre></div></div>
 </div>
+<p>Let’s plot some digit examples. Each digit is stored as a row vector of 784 elements. To display it as an image, we need to reshape this vector as a 28x28 matrix, and then use the command <code class="docutils literal notranslate"><span class="pre">imshow</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
@@ -523,16 +529,21 @@ print(counts)
 
 
 def plot_image(im, shape=(28,28)):
+    &#39;&#39;&#39;Plot one image after reshaping.&#39;&#39;&#39;
     im = im.reshape(shape)  # reshape the digit to be 28x28
     plt.imshow(im, cmap=&#39;binary&#39;)
 
+def plot_ten_images(x, y, shape=(28,28)):
+    &#39;&#39;&#39;Plot the first ten images from x in a 2x5 plot, after reshaping.&#39;&#39;&#39;
+    plt.figure(figsize=(10,5))  # new figure with height=5, width=10
+    for i in range(10):
+        plt.subplot(2, 5, i+1)
+        image = x[i, :]
+        plot_image(image, shape=shape)
+        plt.title(&quot;label: &quot; + str(y[i]))
 
-for i in range(10):
-    plt.subplot(2, 5, i+1)
-    image = x[i, :]
-    plot_image(image)
-    plt.title(&quot;label: &quot; + str(y[i]))
 
+plot_ten_images(x,y,shape=(28,28))
 </pre></div>
 </div>
 </div>
@@ -540,11 +551,15 @@ for i in range(10):
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../images/tutorials_lab02_4_0.png" src="../images/tutorials_lab02_4_0.png" />
+<img alt="../images/tutorials_lab02_6_0.png" src="../images/tutorials_lab02_6_0.png" />
 </div>
 </div>
+<div class="section" id=" Implementing-the-fit-function">
+<h2><span class="section-number">2.1. </span> Implementing the fit function<a class="headerlink" href="# Implementing-the-fit-function" title="Permalink to this headline">¶</a></h2>
+<p>We now implement the fit function of the nearest-mean-centroid (NMC) classifier. It consists of estimating the average centroid for each class. Then, during prediction, the classifier will assign the input sample to the class of the closest centroid.</p>
+<p>Let’s start by estimating the centroid for class 0.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
@@ -555,15 +570,10 @@ y0 = y[y==0]
 print(y0.size)
 print(x0.shape[0])
 
-for i in range(10):
-    plt.subplot(2, 5, i+1)
-    image = x0[i, :]
-    plot_image(image)
-    plt.title(&quot;label: &quot; + str(y0[i]))
+plot_ten_images(x0,y0,shape=(28,28))
 
 centroid0 = x0.mean(axis=0)
 print(centroid0.shape)
-
 </pre></div>
 </div>
 </div>
@@ -581,17 +591,15 @@ print(centroid0.shape)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../images/tutorials_lab02_5_1.png" src="../images/tutorials_lab02_5_1.png" />
+<img alt="../images/tutorials_lab02_8_1.png" src="../images/tutorials_lab02_8_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-
 <span></span>plot_image(centroid0)
-
 </pre></div>
 </div>
 </div>
@@ -599,30 +607,27 @@ print(centroid0.shape)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../images/tutorials_lab02_6_0.png" src="../images/tutorials_lab02_6_0.png" />
+<img alt="../images/tutorials_lab02_9_0.png" src="../images/tutorials_lab02_9_0.png" />
 </div>
 </div>
+<p>We can now generalize our algorithm to compute the centroids of all classes.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
 <span></span># compute centroid for each class
-
-print(x.shape)
-
 num_features = x.shape[1]
 centroids = np.zeros(shape=(num_classes, num_features))
+labels = np.zeros(shape=(num_classes, ), dtype=&#39;int&#39;)
 print(centroids.shape)
 
 for i in range(num_classes):
     xi = x[y==i, :]  # all digits from class i
     centroids[i,:] = xi.mean(axis=0)  # average digit for class i
+    labels[i] = i  # label of i-th centroid
 
-for i in range(10):
-    plt.subplot(2, 5, i+1)
-    plot_image(centroids[i, :])
-    plt.title(&quot;label: &quot; + str(i))
+plot_ten_images(centroids,labels,shape=(28,28))
 </pre></div>
 </div>
 </div>
@@ -631,7 +636,6 @@ for i in range(10):
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(1000, 784)
 (10, 784)
 </pre></div></div>
 </div>
@@ -639,19 +643,16 @@ for i in range(10):
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../images/tutorials_lab02_7_1.png" src="../images/tutorials_lab02_7_1.png" />
+<img alt="../images/tutorials_lab02_11_1.png" src="../images/tutorials_lab02_11_1.png" />
 </div>
 </div>
+<p>Finally, we create the function <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span># wrap it into the fit function
-
-print(np.unique(y))
-
-def fit(x_tr, y_tr):
+<span></span>def fit(x_tr, y_tr):
     &quot;&quot;&quot;Estimate the centroid for each class from the training data&quot;&quot;&quot;
     labels = np.unique(y_tr)
     centroids = np.zeros(shape=(labels.size, x_tr.shape[1]))
@@ -664,36 +665,16 @@ def fit(x_tr, y_tr):
 
 centroids, labels = fit(x, y)
 
-for i in range(10):
-    plt.subplot(2, 5, i+1)
-    plot_image(centroids[i, :])
-    plt.title(&quot;label: &quot; + str(labels[i]))
-
-
-
-names = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
-
-for i, name in enumerate(names):
-    print(i, name)
+plot_ten_images(centroids,labels,shape=(28,28))
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[0 1 2 3 4 5 6 7 8 9]
-0 a
-1 b
-2 c
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../images/tutorials_lab02_8_1.png" src="../images/tutorials_lab02_8_1.png" />
+<img alt="../images/tutorials_lab02_13_0.png" src="../images/tutorials_lab02_13_0.png" />
+</div>
 </div>
 </div>
 </div>
