@@ -91,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#Splitting-data-into-training-and-test">2.1. Splitting data into training and test</a></li>
 <li class="toctree-l2"><a class="reference internal" href="# Implementing-the-fit-function">2.2.  Implementing the fit function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Predict">2.3. Predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="# Evaluate-test-error">2.4.  Evaluate test error</a></li>
 </ul>
 </li>
 </ul>
@@ -454,7 +455,7 @@ def load_mnist_data(filename, n_samples=None):
 # loads data from a CSV file hosted in our repository
 filename = &quot;https://github.com/unica-isde/isde/raw/master/data/mnist_data.csv&quot;
 
-x, y = load_mnist_data(filename, n_samples=1000)
+x, y = load_mnist_data(filename) # , n_samples=1000)
 print(x.shape)
 print(y.shape)
 print(y, type(y))
@@ -467,36 +468,9 @@ print(x, type(x))
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(1000, 784)
-(1000,)
-[6 7 0 6 8 2 6 3 9 3 2 8 6 1 7 4 8 8 9 0 3 3 9 0 5 2 9 4 1 0 3 7 5 8 7 7 8
- 2 9 7 1 2 6 4 2 5 2 3 6 6 5 0 0 2 8 1 6 1 0 4 3 1 6 1 9 0 1 4 5 6 7 8 9 1
- 2 3 4 5 6 7 0 1 2 3 4 5 6 7 8 9 8 4 0 0 7 2 4 3 8 6 6 3 2 6 3 3 0 1 4 7 8
- 0 3 1 9 0 1 9 1 2 7 0 1 3 8 2 9 2 7 6 5 5 9 9 8 2 9 1 3 2 3 4 3 1 9 0 9 3
- 6 8 7 0 1 0 5 8 2 7 7 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
- 6 7 8 9 1 7 4 8 1 5 6 5 7 2 8 6 3 3 8 6 5 4 0 9 1 7 2 9 1 5 1 3 2 2 3 0 6
- 4 3 7 6 9 0 4 8 1 4 0 6 1 2 6 9 2 2 3 5 5 1 0 7 7 9 6 2 9 4 7 0 2 3 4 0 0
- 8 8 8 5 1 3 7 4 9 8 8 9 0 9 8 9 0 2 6 5 6 7 4 7 5 4 1 3 5 3 1 2 3 4 5 6 1
- 2 3 4 6 0 1 2 4 5 6 7 8 1 7 2 4 1 4 1 4 9 6 8 4 5 3 7 8 4 3 3 5 6 7 0 6 1
- 6 8 7 0 1 5 0 8 5 0 1 5 8 4 2 3 9 7 6 9 1 9 0 6 7 1 2 3 9 2 4 5 5 3 7 5 3
- 1 8 2 2 3 0 2 9 4 9 7 0 2 7 4 9 9 2 5 9 8 3 8 6 7 0 0 1 2 3 4 5 6 7 8 9 0
- 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 0 7 2 6 5 5 3 7 8 6 6 6 6 4 3 8 8
- 3 0 1 9 0 5 4 1 9 1 2 7 0 1 3 8 2 9 2 7 4 2 6 5 5 9 9 1 1 5 7 6 8 2 9 4 3
- 1 9 0 9 3 6 8 7 0 1 0 5 8 2 7 7 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 8 9 0 1 2
- 3 4 5 6 7 8 9 2 1 2 1 3 9 9 8 5 3 7 0 7 7 5 7 9 9 4 7 0 3 4 1 5 8 1 4 8 4
- 1 8 6 6 4 6 0 5 5 3 3 5 7 2 5 9 6 9 2 6 2 1 2 0 8 3 8 3 0 8 7 4 9 5 0 9 7
- 0 0 4 6 0 9 1 6 2 7 6 8 3 5 2 1 8 3 8 6 1 0 2 1 4 0 1 2 3 4 5 6 7 8 9 0 1
- 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 7 6 4 7 6 2 3 4 8 7 8 6 9 8 3 2 2 8 4
- 8 5 6 5 0 2 0 1 1 2 9 6 8 2 1 0 6 5 2 9 7 5 3 9 3 7 1 8 3 8 1 9 5 5 0 1 1
- 9 8 2 6 0 4 5 0 3 1 8 6 7 5 9 9 3 0 3 1 4 4 0 4 9 0 1 2 3 5 6 7 8 0 1 2 3
- 5 6 7 8 9 0 1 2 3 5 6 7 8 9 9 7 0 9 0 1 5 8 8 0 9 3 2 7 8 4 6 1 0 4 9 4 2
- 0 5 0 1 6 9 3 2 9 1 6 0 1 1 8 7 7 6 3 6 0 7 2 4 1 7 0 6 7 1 2 5 8 1 8 2 8
- 7 6 8 7 1 6 2 9 3 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
- 8 9 8 9 5 7 0 3 1 6 8 4 1 5 6 4 2 7 8 1 3 4 3 4 7 2 0 5 0 1 9 2 3 2 3 5 5
- 7 8 4 9 9 7 1 1 9 0 7 8 3 4 8 6 3 8 0 9 6 2 1 0 1 0 6 2 3 8 9 0 7 2 3 4 5
- 5 2 8 5 4 6 6 6 7 9 1 8 2 1 5 3 4 7 9 4 0 0 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4
- 5 6 7 8 9 0 1 2 3 4 5 6 9 0 1 3 1 5 1 2 4 9 2 4 6 8 0 1 1 9 2 6 6 8 7 4 2
- 9] &lt;class &#39;numpy.ndarray&#39;&gt;
+(2890, 784)
+(2890,)
+[6 7 0 ... 4 5 6] &lt;class &#39;numpy.ndarray&#39;&gt;
 [[0. 0. 0. ... 0. 0. 0.]
  [0. 0. 0. ... 0. 0. 0.]
  [0. 0. 0. ... 0. 0. 0.]
@@ -528,17 +502,17 @@ print(counts)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0 105
-1 113
-2 105
-3 99
-4 87
-5 89
-6 101
-7 98
-8 102
-9 101
-[105 113 105  99  87  89 101  98 102 101]
+0 300
+1 329
+2 291
+3 297
+4 269
+5 250
+6 291
+7 305
+8 279
+9 279
+[300 329 291 297 269 250 291 305 279 279]
 </pre></div></div>
 </div>
 <p>Let’s plot some digit examples. Each digit is stored as a row vector of 784 elements. To display it as an image, we need to reshape this vector as a 28x28 matrix, and then use the command <code class="docutils literal notranslate"><span class="pre">imshow</span></code>.</p>
@@ -621,11 +595,11 @@ assert(n_ts==ts_idx.size)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[597 188 957 165 633 100 290 976  46 626]
-600 600
-400 400
-(600, 784) (600,)
-(400, 784) (400,)
+[2037 1579  488   89 1589 1458  694 1599 1296 1587]
+1734 1734
+1156 1156
+(1734, 784) (1734,)
+(1156, 784) (1156,)
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -692,8 +666,8 @@ print(centroid0.shape)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-69
-69
+188
+188
 (784,)
 </pre></div></div>
 </div>
@@ -758,7 +732,7 @@ plot_ten_images(centroids,labels,shape=(28,28))
 </div>
 <p>Finally, we create the function <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
@@ -790,7 +764,7 @@ plot_ten_images(centroids,labels,shape=(28,28))
 <div class="section" id="Predict">
 <h2><span class="section-number">2.3. </span>Predict<a class="headerlink" href="#Predict" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
@@ -799,14 +773,88 @@ plot_ten_images(centroids,labels,shape=(28,28))
 n_samples = xts.shape[0]
 n_classes = centroids.shape[0]
 dist = np.zeros(shape=(n_samples, n_classes))
+ypred = np.zeros(shape=(n_samples, ), dtype=&#39;int&#39;)
 
 print(dist.shape)
 
 for i in range(n_samples):
     for k in range(n_classes):
-        #v = (xts[i,:]-centroids[k,:])**2
-        #dist[i,k] = v.sum()
         dist[i,k] = np.linalg.norm(xts[i,:]-centroids[k,:], ord=2)
+    ypred[i] = np.argmin(dist[i,:])
+
+ypred2 = np.argmin(dist, axis=1)
+print(ypred==ypred2)
+
+dist2 = np.zeros(shape=(n_samples, n_classes))
+for i in range(n_samples):
+    dist2[i,:] = np.linalg.norm(xts[i,:]-centroids, ord=2, axis=1)
+print(dist2)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(1156, 10)
+[ True  True  True ...  True  True  True]
+[[9.43200426 8.7588766  7.6320701  ... 8.31379008 7.16683703 6.51529299]
+ [9.46311483 7.89757756 7.48725704 ... 8.15301221 6.45012921 7.56358723]
+ [8.93136554 8.35288005 8.27245979 ... 6.69798339 7.0391999  5.8127405 ]
+ ...
+ [8.69252527 9.37170297 6.24023453 ... 8.07414166 7.69937411 8.44608572]
+ [9.40444617 9.13321537 7.80564674 ... 9.37666901 8.77091258 9.7475813 ]
+ [9.60934696 9.77408603 9.41026704 ... 8.91474088 6.90341196 7.88296315]]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>dist3 = np.zeros(shape=(n_samples, n_classes))
+for k in range(n_classes):
+    m = xts-centroids[k,:]
+    print(m.shape)
+    dist3[:, k] = np.linalg.norm(xts-centroids[k,:], ord=2, axis=1)
+print(dist3)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(1156, 784)
+(1156, 784)
+(1156, 784)
+(1156, 784)
+(1156, 784)
+(1156, 784)
+(1156, 784)
+(1156, 784)
+(1156, 784)
+(1156, 784)
+[[9.43200426 8.7588766  7.6320701  ... 8.31379008 7.16683703 6.51529299]
+ [9.46311483 7.89757756 7.48725704 ... 8.15301221 6.45012921 7.56358723]
+ [8.93136554 8.35288005 8.27245979 ... 6.69798339 7.0391999  5.8127405 ]
+ ...
+ [8.69252527 9.37170297 6.24023453 ... 8.07414166 7.69937411 8.44608572]
+ [9.40444617 9.13321537 7.80564674 ... 9.37666901 8.77091258 9.7475813 ]
+ [9.60934696 9.77408603 9.41026704 ... 8.91474088 6.90341196 7.88296315]]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>from sklearn.metrics import pairwise_distances
+
+dist = pairwise_distances(xts, centroids)  # dist.shape = (400, 10)
+ypred = np.argmin(dist, axis=1)
 
 print(dist)
 </pre></div>
@@ -817,20 +865,74 @@ print(dist)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(400, 10)
-[[ 82.47418788  68.04371458  63.97238393 ...  72.13403483  66.77236752
-   59.6151264 ]
- [ 90.24043208  60.02508165  66.83375329 ...  39.38282867  41.58368566
-   26.3413887 ]
- [ 78.85986273  69.18314114  62.52921618 ...  64.86313171  30.94249454
-   54.97470575]
+[[9.43200426 8.7588766  7.6320701  ... 8.31379008 7.16683703 6.51529299]
+ [9.46311483 7.89757756 7.48725704 ... 8.15301221 6.45012921 7.56358723]
+ [8.93136554 8.35288005 8.27245979 ... 6.69798339 7.0391999  5.8127405 ]
  ...
- [109.41676136  15.60602139  58.74328117 ...  62.76526645  65.43744293
-   66.49544573]
- [ 98.24881146  79.23338429  39.05429636 ...  84.91188748  76.67201482
-   76.08095086]
- [ 26.91527353 135.31568504  84.38199849 ... 115.19860041  77.67286588
-  111.34640396]]
+ [8.69252527 9.37170297 6.24023453 ... 8.07414166 7.69937411 8.44608572]
+ [9.40444617 9.13321537 7.80564674 ... 9.37666901 8.77091258 9.7475813 ]
+ [9.60934696 9.77408603 9.41026704 ... 8.91474088 6.90341196 7.88296315]]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>def predict_for_loops(xts, centroids):
+    n_samples = xts.shape[0]
+    n_classes = centroids.shape[0]
+    dist = np.zeros(shape=(n_samples, n_classes))
+    ypred = np.zeros(shape=(n_samples, ), dtype=&#39;int&#39;)
+
+    for i in range(n_samples):
+        for k in range(n_classes):
+            dist[i,k] = np.linalg.norm(xts[i,:]-centroids[k,:], ord=2)
+        ypred[i] = np.argmin(dist[i,:])
+
+    return ypred
+
+
+def predict(xts, centroids):
+    dist = pairwise_distances(xts, centroids)  # dist.shape = (400, 10)
+    ypred = np.argmin(dist, axis=1)
+    return ypred
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id=" Evaluate-test-error">
+<h2><span class="section-number">2.4. </span> Evaluate test error<a class="headerlink" href="# Evaluate-test-error" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span># Given yts, ypred, how do I compute the test error?
+err=0
+n_samples = yts.size
+for i in range(n_samples):
+    if yts[i]!=ypred[i]:
+        err += 1
+
+print(err)
+print(&quot;Error: &quot;, 100.0*err/n_samples, &quot;%&quot;)
+
+# print(yts!=ypred)
+print(&quot;Error: &quot;, 100.0*(yts!=ypred).mean(), &quot;%&quot;)
+
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+156
+Error:  13.494809688581315 %
+Error:  13.494809688581316 %
 </pre></div></div>
 </div>
 </div>
