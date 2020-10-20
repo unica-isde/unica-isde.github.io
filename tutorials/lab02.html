@@ -88,7 +88,9 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">2. Python - Programming Exercise</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="# Implementing-the-fit-function">2.1.  Implementing the fit function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Splitting-data-into-training-and-test">2.1. Splitting data into training and test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="# Implementing-the-fit-function">2.2.  Implementing the fit function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Predict">2.3. Predict</a></li>
 </ul>
 </li>
 </ul>
@@ -159,21 +161,35 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput.container,
-div.nbinput.container div.prompt,
-div.nbinput.container div.input_area,
-div.nbinput.container div[class*=highlight],
-div.nbinput.container div[class*=highlight] pre,
-div.nboutput.container,
-div.nboutput.container div.prompt,
-div.nboutput.container div.output_area,
-div.nboutput.container div[class*=highlight],
-div.nboutput.container div[class*=highlight] pre {
-    background: none;
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
     border: none;
-    padding: 0 0;
+    padding: 0;
     margin: 0;
     box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
 }
 
 /* avoid gaps between output lines */
@@ -274,7 +290,7 @@ div.nboutput.container div.output_area {
 div.nbinput.container div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
-    background: #f5f5f5;
+    /*background: #f5f5f5;*/
 }
 
 /* override MathJax center alignment in output cells */
@@ -340,6 +356,7 @@ div.nboutput.container div.output_area.rendered_html,
 div.nboutput.container div.output_area > div.output_javascript,
 div.nboutput.container div.output_area:not(.rendered_html) > img{
     padding: 5px;
+    margin: 0;
 }
 
 /* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
@@ -526,7 +543,7 @@ print(counts)
 </div>
 <p>Let’s plot some digit examples. Each digit is stored as a row vector of 784 elements. To display it as an image, we need to reshape this vector as a 28x28 matrix, and then use the command <code class="docutils literal notranslate"><span class="pre">imshow</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
@@ -559,18 +576,106 @@ plot_ten_images(x,y,shape=(28,28))
 <img alt="../images/tutorials_lab02_6_0.png" src="../images/tutorials_lab02_6_0.png" />
 </div>
 </div>
+<div class="section" id="Splitting-data-into-training-and-test">
+<h2><span class="section-number">2.1. </span>Splitting data into training and test<a class="headerlink" href="#Splitting-data-into-training-and-test" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span># x: 1000, 784; y=1000
+tr_frac = 0.6
+
+n_samples = x.shape[0]
+
+n_tr = int(tr_frac*n_samples)
+n_ts = n_samples - n_tr
+
+# create a vector of indices from 0 to 999 = [0, 1, 2, ... 999]
+idx = np.linspace(0, n_samples, num=n_samples, endpoint=False, dtype=&#39;int&#39;)
+np.random.shuffle(idx)  # shuffling the elements of idx (in-place)
+
+print(idx[:10])
+
+tr_idx = idx[:n_tr]  # extract the subset of training indices (first n_tr samples)
+ts_idx = idx[n_tr:]  # extract the subset of training indices (first n_tr samples)
+
+xtr = x[tr_idx,:]
+ytr = y[tr_idx]
+
+xts = x[ts_idx,:]
+yts = y[ts_idx]
+
+print(n_tr, tr_idx.size)
+print(n_ts, ts_idx.size)
+print(xtr.shape, ytr.shape)
+print(xts.shape, yts.shape)
+
+assert(n_tr==tr_idx.size)
+assert(n_ts==ts_idx.size)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[597 188 957 165 633 100 290 976  46 626]
+600 600
+400 400
+(600, 784) (600,)
+(400, 784) (400,)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>def data_split(x, y, tr_frac=0.6):
+    n_samples = x.shape[0]
+
+    n_tr = int(tr_frac*n_samples)
+    n_ts = n_samples - n_tr
+
+    # create a vector of indices from 0 to 999 = [0, 1, 2, ... n_samples-1]
+    idx = np.linspace(0, n_samples, num=n_samples, endpoint=False, dtype=&#39;int&#39;)
+    np.random.shuffle(idx)  # shuffling the elements of idx (in-place)
+
+    tr_idx = idx[:n_tr]  # extract the subset of training indices
+    ts_idx = idx[n_tr:]  # extract the subset of test indices
+
+    # check coherence with the number of extracted elements
+    assert(n_tr==tr_idx.size)
+    assert(n_ts==ts_idx.size)
+
+    xtr = x[tr_idx,:]
+    ytr = y[tr_idx]
+    xts = x[ts_idx,:]
+    yts = y[ts_idx]
+    return xtr, ytr, xts, yts
+
+
+tr_frac = 0.6
+xtr, ytr, xts, yts = data_split(x, y, tr_frac=tr_frac)
+
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id=" Implementing-the-fit-function">
-<h2><span class="section-number">2.1. </span> Implementing the fit function<a class="headerlink" href="# Implementing-the-fit-function" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2. </span> Implementing the fit function<a class="headerlink" href="# Implementing-the-fit-function" title="Permalink to this headline">¶</a></h2>
 <p>We now implement the fit function of the nearest-mean-centroid (NMC) classifier. It consists of estimating the average centroid for each class. Then, during prediction, the classifier will assign the input sample to the class of the closest centroid.</p>
 <p>Let’s start by estimating the centroid for class 0.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
 <span></span># fit my classification function (estimate centroids from training data)
-x0 = x[y==0, :]
-y0 = y[y==0]
+x0 = xtr[ytr==0, :]
+y0 = ytr[ytr==0]
 
 print(y0.size)
 print(x0.shape[0])
@@ -587,8 +692,8 @@ print(centroid0.shape)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-105
-105
+69
+69
 (784,)
 </pre></div></div>
 </div>
@@ -596,11 +701,11 @@ print(centroid0.shape)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../images/tutorials_lab02_8_1.png" src="../images/tutorials_lab02_8_1.png" />
+<img alt="../images/tutorials_lab02_11_1.png" src="../images/tutorials_lab02_11_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
@@ -612,23 +717,23 @@ print(centroid0.shape)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../images/tutorials_lab02_9_0.png" src="../images/tutorials_lab02_9_0.png" />
+<img alt="../images/tutorials_lab02_12_0.png" src="../images/tutorials_lab02_12_0.png" />
 </div>
 </div>
 <p>We can now generalize our algorithm to compute the centroids of all classes.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
 <span></span># compute centroid for each class
-num_features = x.shape[1]
+num_features = xtr.shape[1]
 centroids = np.zeros(shape=(num_classes, num_features))
 labels = np.zeros(shape=(num_classes, ), dtype=&#39;int&#39;)
 print(centroids.shape)
 
 for i in range(num_classes):
-    xi = x[y==i, :]  # all digits from class i
+    xi = xtr[ytr==i, :]  # all digits from class i
     centroids[i,:] = xi.mean(axis=0)  # average digit for class i
     labels[i] = i  # label of i-th centroid
 
@@ -648,12 +753,12 @@ plot_ten_images(centroids,labels,shape=(28,28))
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../images/tutorials_lab02_11_1.png" src="../images/tutorials_lab02_11_1.png" />
+<img alt="../images/tutorials_lab02_14_1.png" src="../images/tutorials_lab02_14_1.png" />
 </div>
 </div>
 <p>Finally, we create the function <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre>
@@ -668,7 +773,7 @@ plot_ten_images(centroids,labels,shape=(28,28))
     return centroids, labels
 
 
-centroids, labels = fit(x, y)
+centroids, labels = fit(xtr, ytr)
 
 plot_ten_images(centroids,labels,shape=(28,28))
 </pre></div>
@@ -678,8 +783,55 @@ plot_ten_images(centroids,labels,shape=(28,28))
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../images/tutorials_lab02_13_0.png" src="../images/tutorials_lab02_13_0.png" />
+<img alt="../images/tutorials_lab02_16_0.png" src="../images/tutorials_lab02_16_0.png" />
 </div>
+</div>
+</div>
+<div class="section" id="Predict">
+<h2><span class="section-number">2.3. </span>Predict<a class="headerlink" href="#Predict" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span># xts, centroids
+
+n_samples = xts.shape[0]
+n_classes = centroids.shape[0]
+dist = np.zeros(shape=(n_samples, n_classes))
+
+print(dist.shape)
+
+for i in range(n_samples):
+    for k in range(n_classes):
+        #v = (xts[i,:]-centroids[k,:])**2
+        #dist[i,k] = v.sum()
+        dist[i,k] = np.linalg.norm(xts[i,:]-centroids[k,:], ord=2)
+
+print(dist)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(400, 10)
+[[ 82.47418788  68.04371458  63.97238393 ...  72.13403483  66.77236752
+   59.6151264 ]
+ [ 90.24043208  60.02508165  66.83375329 ...  39.38282867  41.58368566
+   26.3413887 ]
+ [ 78.85986273  69.18314114  62.52921618 ...  64.86313171  30.94249454
+   54.97470575]
+ ...
+ [109.41676136  15.60602139  58.74328117 ...  62.76526645  65.43744293
+   66.49544573]
+ [ 98.24881146  79.23338429  39.05429636 ...  84.91188748  76.67201482
+   76.08095086]
+ [ 26.91527353 135.31568504  84.38199849 ... 115.19860041  77.67286588
+  111.34640396]]
+</pre></div></div>
 </div>
 </div>
 </div>
